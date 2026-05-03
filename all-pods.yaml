@@ -1,0 +1,104 @@
+---
+# НЕЙМСПЕЙС NS-A
+# Под 1: Python приложение
+apiVersion: v1
+kind: Pod
+metadata:
+  name: python-app-1
+  namespace: ns-a
+  labels:
+    app: python-app
+    type: web
+spec:
+  containers:
+  - name: python
+    image: python:3.9-slim
+    command: ["python", "/app/app.py"]
+    ports:
+    - containerPort: 5000
+      name: http
+    volumeMounts:
+    - name: app-code
+      mountPath: /app
+  volumes:
+  - name: app-code
+    configMap:
+      name: python-app
+---
+# Под 2: Nginx веб-сервер
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-web
+  namespace: ns-a
+  labels:
+    app: nginx
+    type: web
+spec:
+  containers:
+  - name: nginx
+    image: nginx:alpine
+    ports:
+    - containerPort: 80
+      name: http
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html
+    env:
+    - name: HOSTNAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+  volumes:
+  - name: html
+    configMap:
+      name: nginx-html
+---
+# НЕЙМСПЕЙС NS-B
+# Под 1: Python приложение
+apiVersion: v1
+kind: Pod
+metadata:
+  name: python-app-2
+  namespace: ns-b
+  labels:
+    app: python-app
+    type: web
+spec:
+  containers:
+  - name: python
+    image: python:3.9-slim
+    command: ["python", "/app/app.py"]
+    ports:
+    - containerPort: 5001
+      name: http
+    volumeMounts:
+    - name: app-code
+      mountPath: /app
+  volumes:
+  - name: app-code
+    configMap:
+      name: python-app
+---
+# Под 2: Контейнер с сетевыми утилитами
+apiVersion: v1
+kind: Pod
+metadata:
+  name: network-tools
+  namespace: ns-b
+  labels:
+    app: network-tools
+    type: tools
+spec:
+  containers:
+  - name: tools
+    image: ubuntu:22.04
+    command: ["sleep", "infinity"]
+    securityContext:
+      capabilities:
+        add:
+        - NET_ADMIN
+        - NET_RAW
+  volumes:
+  - name: tools
+    emptyDir: {}

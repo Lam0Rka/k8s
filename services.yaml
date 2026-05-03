@@ -1,0 +1,45 @@
+---
+# Сервис для Python приложения в ns-a
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-service
+  namespace: ns-a
+spec:
+  selector:
+    app: python-app
+  ports:
+  - port: 5000
+    targetPort: 5000
+    name: http
+  type: ClusterIP
+---
+# Сервис для Nginx в ns-a
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: ns-a
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  type: ClusterIP
+---
+# Сервис для Python приложения в ns-b
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-service
+  namespace: ns-b
+spec:
+  selector:
+    app: python-app
+  ports:
+  - port: 5000
+    targetPort: 5000
+    name: http
+  type: ClusterIP

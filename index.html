@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nginx Test Page</title>
+</head>
+<body>
+    <h1>Welcome to Nginx Pod</h1>
+    <p>Pod Name: <span id="pod-name"></span></p>
+    <script>
+        fetch('/pod-name')
+            .then(response => response.text())
+            .then(name => document.getElementById('pod-name').innerText = name);
+    </script>
+</body>
+</html>
