@@ -13,7 +13,7 @@ spec:
   containers:
   - name: python
     image: python:3.9-slim
-    command: ["python", "/app/app.py"]
+    command: ["python", "/app/app1.py"]
     ports:
     - containerPort: 5000
       name: http
@@ -68,7 +68,7 @@ spec:
   containers:
   - name: python
     image: python:3.9-slim
-    command: ["python", "/app/app.py"]
+    command: ["python", "/app/app2.py"]
     ports:
     - containerPort: 5001
       name: http
